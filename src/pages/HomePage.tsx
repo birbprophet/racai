@@ -5,7 +5,13 @@ import Typist from "react-typist";
 import TypistLoop from "react-typist-loop";
 
 const Page: React.FC = () => {
-  const typistLoopTextList: string[] = ["happy", "healthy"];
+  const typistLoopTextList: string[] = [
+    "happy",
+    "healthy",
+    "hopeful",
+    "holistic",
+    "honourable"
+  ];
 
   return (
     <IonPage>
