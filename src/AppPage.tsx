@@ -17,7 +17,6 @@ import { apps, home, contact } from "ionicons/icons";
 import DashboardPage from "./pages/DashboardPage";
 import OrdersPage from "./pages/OrdersPage";
 import AccountPage from "./pages/AccountPage";
-import DetailsPage from "./pages/DetailsPage";
 
 const ProtectedRoute: React.FC<any> = ({ component: Component, ...rest }) => {
   const [user, initialising] = useAuthState(auth);
@@ -61,7 +60,6 @@ const ReactComponent: React.FC = () => {
           exact={true}
         />
         <ProtectedRoute path="/app/account" component={AccountPage} />
-        <ProtectedRoute path="/app/details" component={DetailsPage} />
         <Route
           path="/app"
           render={() => <Redirect to="/app/dashboard" />}

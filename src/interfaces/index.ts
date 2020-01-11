@@ -8,5 +8,18 @@ export interface IDailySpecial {
   collectionLocation: string;
   hoursLeft: number;
   minutesLeft: number;
-  loading?: boolean;
+  id: string;
+  loading: boolean;
+}
+
+export interface IDailyOrder {
+  userName: string;
+  userEmail: string;
+  orderTime: string;
+  dailyName: string;
+  dailyDate: string;
+  paid: boolean;
+  ready: boolean;
+  received: boolean;
+  id: string;
 }

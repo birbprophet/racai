@@ -1,19 +1,68 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { IonCard, IonCardContent, IonCardTitle } from "@ionic/react";
 import IngredientsList from "./IngredientsList";
 import { IDailySpecial } from "../interfaces";
+import { airtable } from "../scripts/airtable";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth } from "../scripts/firebase";
+
+import OtherSpecialCard from "./OtherSpecialCard";
 
 interface Props {
   dailySpecial: IDailySpecial;
   isDaily: boolean;
 }
 const Component: React.FC<Props> = ({ dailySpecial, isDaily }: Props) => {
+  const [user] = useAuthState(auth);
   const [detailsClicked, setDetailsClicked] = useState<boolean>(false);
+  const [orderSuccess, setOrderSuccess] = useState<boolean>(false);
+  const [orderFailed, setOrderFailed] = useState<boolean>(false);
   const handleDetailsOnClicked = () => {
     setDetailsClicked(!detailsClicked);
   };
   const isActive: boolean =
     dailySpecial.hoursLeft > 0 && dailySpecial.minutesLeft > 0;
+
+  useEffect(() => {
+    if (user && user.email) {
+      airtable("Orders")
+        .select({
+          maxRecords: 1,
+          filterByFormula: `({UserEmail} = '${user.email}')`
+        })
+        .firstPage((err: any, records: any) => {
+          if (err) {
+            console.error(err);
+          } else if (records.length > 0) {
+            setOrderSuccess(true);
+          }
+        });
+    }
+  }, [user]);
+
+  const handleOrderOnClicked = () => {
+    airtable("Orders").create(
+      [
+        {
+          fields: {
+            Daily: [dailySpecial.id],
+            Completed: false,
+            Delivered: false,
+            Paid: false,
+            UserName: user?.displayName || "Unknown User",
+            UserEmail: user?.email || "Unknown User"
+          }
+        }
+      ],
+      (err: any, records: any) => {
+        if (err || !records) {
+          setOrderFailed(true);
+        } else if (records) {
+          setOrderSuccess(true);
+        }
+      }
+    );
+  };
 
   return isDaily ? (
     <IonCard>
@@ -36,13 +85,29 @@ const Component: React.FC<Props> = ({ dailySpecial, isDaily }: Props) => {
             </div>
           </div>
           <div>{dailySpecial.description}</div>
-          <div className="mt-6">
-            <button className="rounded w-full py-4 font-bold bg-purple-800 text-white text-xl hover:bg-purple-600 tracking-widest">
-              ORDER NOW
-            </button>
+          <div className="mt-6 h-16">
+            {orderSuccess ? (
+              <div className="rounded w-full py-4 font-bold bg-green-200 text-green-900 text-xl tracking-widest text-center">
+                ORDER SENT
+              </div>
+            ) : (
+              <button
+                onClick={handleOrderOnClicked}
+                className="rounded w-full py-4 font-bold bg-purple-800 text-white text-xl hover:bg-purple-600 tracking-widest"
+              >
+                ORDER NOW
+              </button>
+            )}
           </div>
+          {orderFailed ? (
+            <div className="text-red-700 ml-1">
+              Order unsuccessful, please try again.
+            </div>
+          ) : (
+            <></>
+          )}
 
-          <div className="mt-6 mx-1">
+          <div className="mt-4 mx-1">
             <div className="flex">
               <div onClick={handleDetailsOnClicked}>
                 <u className="cursor-pointer">
@@ -93,29 +158,7 @@ const Component: React.FC<Props> = ({ dailySpecial, isDaily }: Props) => {
       </IonCardContent>
     </IonCard>
   ) : (
-    <IonCard>
-      <img
-        src={dailySpecial.imgSrc}
-        alt={dailySpecial.name}
-        className="h-48 object-cover"
-      />
-      <IonCardContent>
-        <div>
-          <div className="mb-4">
-            <div className="font-semibold tracking-widest text-sm">
-              AÇAÍ OF THE DAY:{" "}
-              {dailySpecial.collectionDate
-                .slice(0, dailySpecial.collectionDate.length - 5)
-                .toUpperCase()}
-            </div>
-            <div className="mt-2">
-              <IonCardTitle>{dailySpecial.name}</IonCardTitle>
-            </div>
-          </div>
-          <div>{dailySpecial.description}</div>
-        </div>
-      </IonCardContent>
-    </IonCard>
+    <OtherSpecialCard dailySpecial={dailySpecial} />
   );
 };
 export default Component;

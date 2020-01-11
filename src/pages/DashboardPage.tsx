@@ -4,7 +4,8 @@ import {
   IonHeader,
   IonPage,
   IonTitle,
-  IonToolbar
+  IonToolbar,
+  IonItemDivider
 } from "@ionic/react";
 import moment from "moment";
 import DailySpecialCard from "../components/DailySpecialCard";
@@ -48,6 +49,7 @@ const Page: React.FC = () => {
               collectionLocation: record.get("Location"),
               hoursLeft: hoursLeft > 0 ? hoursLeft : 0,
               minutesLeft: minutesLeft > 0 ? minutesLeft : 0,
+              id: record.id,
               loading: false
             };
           }
@@ -66,6 +68,7 @@ const Page: React.FC = () => {
     collectionLocation: "",
     hoursLeft: 0,
     minutesLeft: 0,
+    id: "",
     loading: true
   };
 
@@ -84,8 +87,11 @@ const Page: React.FC = () => {
       </IonHeader>
       <IonContent>
         <DailySpecialCard dailySpecial={dailySpecial} isDaily />
-        <div className="w-full mt-12">
-          <div className="m-6 text-2xl font-bold">Previous Specials</div>
+        <div className="mt-16 mb-12">
+          <div className="mx-6 text-2xl font-bold text-gray-900 font-slab">
+            Previous Specials
+          </div>
+          <div className="mx-6 mt-4 h-1 bg-gray-900" />
         </div>
         {previousSpecials.map((previousSpecial: IDailySpecial) => (
           <DailySpecialCard
