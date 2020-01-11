@@ -12,7 +12,11 @@ const Page: React.FC = () => {
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          <IonTitle>RACAI</IonTitle>
+          <IonTitle>
+            <span className="font-slab text-xl text-purple-800 font-black tracking-wider">
+              RACAI
+            </span>
+          </IonTitle>
         </IonToolbar>
       </IonHeader>
       <IonContent></IonContent>

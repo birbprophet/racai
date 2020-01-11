@@ -1,5 +1,13 @@
-import React from 'react';
-import { IonBackButton, IonButtons, IonHeader, IonPage, IonToolbar, IonTitle, IonContent } from '@ionic/react';
+import React from "react";
+import {
+  IonBackButton,
+  IonButtons,
+  IonHeader,
+  IonPage,
+  IonToolbar,
+  IonTitle,
+  IonContent
+} from "@ionic/react";
 
 const Details: React.FC = () => {
   return (
@@ -9,7 +17,11 @@ const Details: React.FC = () => {
           <IonButtons slot="start">
             <IonBackButton defaultHref="/tab2" />
           </IonButtons>
-          <IonTitle>Detail</IonTitle>
+          <IonTitle>
+            <span className="font-slab text-xl text-purple-800 font-black tracking-wider">
+              RACAI
+            </span>
+          </IonTitle>
         </IonToolbar>
       </IonHeader>
       <IonContent>
