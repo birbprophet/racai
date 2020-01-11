@@ -49,7 +49,7 @@ const Page: React.FC = () => {
             </div>
             <div className="text-4xl font-slab font-bold">away</div>
             <div className="mt-6">
-              <div className="text-lg text-gray-700">
+              <div className="text-lg text-gray-700 leading-relaxed">
                 Racai's homemade açaí bowls are made with of fresh, 100% natural
                 ingredients.
               </div>

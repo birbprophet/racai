@@ -20,9 +20,12 @@ const Component: React.FC<Props> = ({ dailySpecial }: Props) => {
         <div>
           <div className="mb-4">
             <div className="font-semibold tracking-widest text-sm">
-              TODAY'S SPECIAL
+              AÇAÍ OF THE DAY:{" "}
+              {dailySpecial.collectionDate
+                .slice(0, dailySpecial.collectionDate.length - 5)
+                .toUpperCase()}
             </div>
-            <div className="mt-1">
+            <div className="mt-2">
               <IonCardTitle>{dailySpecial.name}</IonCardTitle>
             </div>
           </div>
@@ -30,7 +33,7 @@ const Component: React.FC<Props> = ({ dailySpecial }: Props) => {
           <div className="mt-6">
             <button
               onClick={handleDetailsOnClicked}
-              className="p-2 bg-gray-700 text-white focus:outline-none"
+              className="p-2 bg-gray-700 text-white focus:outline-none cursor-pointer"
             >
               {detailsClicked ? "Hide Details" : "Show Details"}
             </button>
@@ -45,7 +48,10 @@ const Component: React.FC<Props> = ({ dailySpecial }: Props) => {
                 <div className="mt-2">
                   <div className="flex">
                     <span className="w-24">Date/Time:</span>
-                    <span>{dailySpecial.collectionTime}</span>
+                    <span>
+                      {dailySpecial.collectionDate},{" "}
+                      {dailySpecial.collectionTime}
+                    </span>
                   </div>
                   <div className="flex">
                     <span className="w-24">Location:</span>

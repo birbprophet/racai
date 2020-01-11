@@ -22,7 +22,8 @@ const Page: React.FC = () => {
       "Almonds",
       "Blueberries"
     ],
-    collectionTime: "12 Jan 2020, 12-2pm",
+    collectionDate: "13 Jan 2020",
+    collectionTime: "12-2pm",
     collectionLocation: "NTU Hall 2 Block X Room X"
   };
 
@@ -30,7 +31,11 @@ const Page: React.FC = () => {
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          <IonTitle>RACAI</IonTitle>
+          <IonTitle>
+            <span className="font-slab text-xl text-purple-800 font-black tracking-wider">
+              RACAI
+            </span>
+          </IonTitle>
         </IonToolbar>
       </IonHeader>
       <IonContent>

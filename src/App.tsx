@@ -61,7 +61,22 @@ const App: React.FC = () => {
           }
           exact={true}
         />
-        <Route path="/login" component={LoginPage} exact={true} />
+        <Route
+          path="/login"
+          render={() =>
+            initialising ? (
+              <>
+                <IonLoading isOpen={true} translucent />
+                <LoginPage />
+              </>
+            ) : user ? (
+              <Redirect to="/app" />
+            ) : (
+              <LoginPage />
+            )
+          }
+          exact={true}
+        />
         <Route path="/app" component={AppPage} />
       </IonReactRouter>
     </IonApp>

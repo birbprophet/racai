@@ -60,8 +60,8 @@ const ReactComponent: React.FC = () => {
           component={OrdersPage}
           exact={true}
         />
-        <ProtectedRoute path="/app/orders/details" component={AccountPage} />
-        <ProtectedRoute path="/app/account" component={DetailsPage} />
+        <ProtectedRoute path="/app/account" component={AccountPage} />
+        <ProtectedRoute path="/app/details" component={DetailsPage} />
         <Route
           path="/app"
           render={() => <Redirect to="/app/dashboard" />}

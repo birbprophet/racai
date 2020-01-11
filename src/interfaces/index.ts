@@ -3,6 +3,7 @@ export interface IDailySpecial {
   description: string;
   imgSrc: string;
   ingredients: string[];
+  collectionDate: string;
   collectionTime: string;
   collectionLocation: string;
 }
