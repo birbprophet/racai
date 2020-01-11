@@ -1,20 +1,11 @@
 import React from "react";
 import { Redirect, Route } from "react-router-dom";
-import {
-  IonApp,
-  IonIcon,
-  IonLabel,
-  IonRouterOutlet,
-  IonTabBar,
-  IonTabButton,
-  IonTabs
-} from "@ionic/react";
+
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth } from "./firebase";
+
+import { setupConfig, IonApp, IonLoading } from "@ionic/react";
 import { IonReactRouter } from "@ionic/react-router";
-import { apps, home, contact } from "ionicons/icons";
-import Home from "./pages/Home";
-import Orders from "./pages/Orders";
-import Account from "./pages/Account";
-import Details from "./pages/Details";
 
 /* Core CSS required for Ionic components to work properly */
 import "@ionic/react/css/core.css";
@@ -32,39 +23,49 @@ import "@ionic/react/css/text-transformation.css";
 import "@ionic/react/css/flex-utils.css";
 import "@ionic/react/css/display.css";
 
-import "./css/index.css";
-
 /* Theme variables */
 import "./theme/variables.css";
 
-const App: React.FC = () => (
-  <IonApp>
-    <IonReactRouter>
-      <IonTabs>
-        <IonRouterOutlet>
-          <Route path="/home" component={Home} exact={true} />
-          <Route path="/orders" component={Orders} exact={true} />
-          <Route path="/tab2/details" component={Details} />
-          <Route path="/account" component={Account} />
-          <Route path="/" render={() => <Redirect to="/home" />} exact={true} />
-        </IonRouterOutlet>
-        <IonTabBar slot="bottom">
-          <IonTabButton tab="home" href="/home">
-            <IonIcon icon={home} />
-            <IonLabel>Home</IonLabel>
-          </IonTabButton>
-          <IonTabButton tab="orders" href="/orders">
-            <IonIcon icon={apps} />
-            <IonLabel>Orders</IonLabel>
-          </IonTabButton>
-          <IonTabButton tab="account" href="/account">
-            <IonIcon icon={contact} />
-            <IonLabel>Account</IonLabel>
-          </IonTabButton>
-        </IonTabBar>
-      </IonTabs>
-    </IonReactRouter>
-  </IonApp>
-);
+/* CSS */
+import "typeface-roboto";
+import "typeface-roboto-slab";
+import "./css/index.css";
+import "./css/fonts.css";
+import "./css/styles.css";
+
+import HomePage from "./pages/HomePage";
+import LoginPage from "./pages/LoginPage";
+import AppPage from "./AppPage";
+
+setupConfig({
+  mode: "ios"
+});
+
+const App: React.FC = () => {
+  const [user, initialising] = useAuthState(auth);
+  return (
+    <IonApp>
+      <IonReactRouter>
+        <Route
+          path="/"
+          render={() =>
+            initialising ? (
+              <>
+                <IonLoading isOpen={true} translucent />
+              </>
+            ) : user ? (
+              <Redirect to="/app" />
+            ) : (
+              <HomePage />
+            )
+          }
+          exact={true}
+        />
+        <Route path="/login" component={LoginPage} exact={true} />
+        <Route path="/app" component={AppPage} />
+      </IonReactRouter>
+    </IonApp>
+  );
+};
 
 export default App;
