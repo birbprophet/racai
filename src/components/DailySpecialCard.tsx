@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { IonCard, IonCardContent, IonCardTitle } from "@ionic/react";
+import { IonCard, IonCardContent, IonCardTitle, IonAlert } from "@ionic/react";
 import IngredientsList from "./IngredientsList";
 import { IDailySpecial } from "../interfaces";
 import { airtable } from "../scripts/airtable";
@@ -16,6 +16,10 @@ const Component: React.FC<Props> = ({ dailySpecial, isDaily }: Props) => {
   const [user] = useAuthState(auth);
   const [detailsClicked, setDetailsClicked] = useState<boolean>(false);
   const [orderSuccess, setOrderSuccess] = useState<boolean>(false);
+  const [instructionsDismissed, setInstructionsDismissed] = useState<boolean>(
+    false
+  );
+  const [orderExists, setOrderExists] = useState<boolean>(false);
   const [orderFailed, setOrderFailed] = useState<boolean>(false);
   const handleDetailsOnClicked = () => {
     setDetailsClicked(!detailsClicked);
@@ -28,17 +32,17 @@ const Component: React.FC<Props> = ({ dailySpecial, isDaily }: Props) => {
       airtable("Orders")
         .select({
           maxRecords: 1,
-          filterByFormula: `({UserEmail} = '${user.email}')`
+          filterByFormula: `AND({UserEmail} = '${user.email}', {DailyDate} = '${dailySpecial.collectionDate})`
         })
         .firstPage((err: any, records: any) => {
           if (err) {
             console.error(err);
           } else if (records.length > 0) {
-            setOrderSuccess(true);
+            setOrderExists(true);
           }
         });
     }
-  }, [user]);
+  }, [user, dailySpecial.collectionDate]);
 
   const handleOrderOnClicked = () => {
     airtable("Orders").create(
@@ -86,7 +90,7 @@ const Component: React.FC<Props> = ({ dailySpecial, isDaily }: Props) => {
           </div>
           <div>{dailySpecial.description}</div>
           <div className="mt-6 h-16">
-            {orderSuccess ? (
+            {orderSuccess || orderExists ? (
               <div className="rounded w-full py-4 font-bold bg-green-200 text-green-900 text-xl tracking-widest text-center">
                 ORDER SENT
               </div>
@@ -156,6 +160,13 @@ const Component: React.FC<Props> = ({ dailySpecial, isDaily }: Props) => {
           )}
         </div>
       </IonCardContent>
+      <IonAlert
+        isOpen={orderSuccess || instructionsDismissed}
+        onDidDismiss={() => setInstructionsDismissed(true)}
+        header={"Payment Instructions"}
+        message={"For payment, please transfer $5 to +6584883341 via PayNow."}
+        buttons={["OK"]}
+      />
     </IonCard>
   ) : (
     <OtherSpecialCard dailySpecial={dailySpecial} />

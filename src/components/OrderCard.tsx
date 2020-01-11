@@ -1,26 +1,22 @@
-import React, { useState, useEffect } from "react";
-import {
-  IonContent,
-  IonHeader,
-  IonItem,
-  IonLabel,
-  IonPage,
-  IonTitle,
-  IonToolbar,
-  IonCard,
-  IonCardContent,
-  IonCardTitle
-} from "@ionic/react";
+import React, { useState } from "react";
+import { IonAlert, IonCard, IonCardContent, IonCardTitle } from "@ionic/react";
 
 import { IDailyOrder } from "../interfaces";
 import moment from "moment";
+import { airtable } from "../scripts/airtable";
 
 interface Props {
   dailyOrder: IDailyOrder;
 }
 
 const Component: React.FC<Props> = ({ dailyOrder }: Props) => {
+  const [cancelSuccess, setCancelSuccess] = useState<boolean>(false);
+  const [instructionsClicked, setInstructionsClicked] = useState<boolean>(
+    false
+  );
   let orderStatus: string = "Loading...";
+  let orderLocked: boolean =
+    dailyOrder.hoursLeft === 0 && dailyOrder.minutesLeft === 0;
   if (!dailyOrder.paid) {
     orderStatus = "Awaiting payment confirmation";
   } else if (!dailyOrder.ready) {
@@ -30,8 +26,24 @@ const Component: React.FC<Props> = ({ dailyOrder }: Props) => {
   } else {
     orderStatus = "Order has been collected";
   }
+  const handleInstructionsOnClick = () => {
+    setInstructionsClicked(true);
+  };
+  const handleCancelOnClick = () => {
+    airtable("Orders").destroy([dailyOrder.id], function(
+      err: any,
+      deletedRecords: any[]
+    ) {
+      if (err || deletedRecords.length < 1) {
+        console.error(err);
+      }
+      setCancelSuccess(true);
+    });
+  };
 
-  return (
+  return cancelSuccess ? (
+    <></>
+  ) : (
     <IonCard>
       <IonCardContent>
         <div className="font-semibold tracking-widest text-sm">
@@ -50,7 +62,32 @@ const Component: React.FC<Props> = ({ dailyOrder }: Props) => {
             <div>{orderStatus}</div>
           </div>
         </div>
+        {orderLocked ? (
+          <></>
+        ) : (
+          <div className="mt-4">
+            <button
+              onClick={handleInstructionsOnClick}
+              className="px-4 py-2 font-semibold bg-gray-100 hover:bg-gray-200"
+            >
+              Instructions
+            </button>
+            <button
+              onClick={handleCancelOnClick}
+              className="px-4 py-2 text-white font-semibold bg-red-500 hover:bg-red-700 ml-2"
+            >
+              Cancel Order
+            </button>
+          </div>
+        )}
       </IonCardContent>
+      <IonAlert
+        isOpen={instructionsClicked}
+        onDidDismiss={() => setInstructionsClicked(false)}
+        header={"Payment Instructions"}
+        message={"For payment, please transfer $5 to +6584883341 via PayNow."}
+        buttons={["OK"]}
+      />
     </IonCard>
   );
 };

@@ -4,18 +4,14 @@ import {
   IonHeader,
   IonPage,
   IonTitle,
-  IonToolbar,
-  IonItemDivider
+  IonToolbar
 } from "@ionic/react";
 import moment from "moment";
 import DailySpecialCard from "../components/DailySpecialCard";
 import { IDailySpecial } from "../interfaces";
 import { airtable } from "../scripts/airtable";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { auth } from "../scripts/firebase";
 
 const Page: React.FC = () => {
-  const [user] = useAuthState(auth);
   const [dailySpecials, setDailySpecials] = useState<IDailySpecial[]>([]);
 
   useEffect(() => {
@@ -32,13 +28,13 @@ const Page: React.FC = () => {
         }
         const airtableDailySpecials: IDailySpecial[] = records.map(
           (record: any) => {
-            const hoursLeft = moment(record.get("CutoffTime")).diff(
-              moment(),
-              "hours"
-            );
-            const minutesLeft = moment(record.get("CutoffTime"))
+            const cutoffTime = record.get("CutoffTime");
+
+            const hoursLeft = moment(cutoffTime).diff(moment(), "hours");
+            const minutesLeft = moment(cutoffTime)
               .subtract(hoursLeft, "hours")
               .diff(moment(), "minutes");
+
             return {
               name: record.get("Name"),
               description: record.get("Description"),

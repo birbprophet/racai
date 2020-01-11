@@ -21,5 +21,7 @@ export interface IDailyOrder {
   paid: boolean;
   ready: boolean;
   received: boolean;
+  hoursLeft: number;
+  minutesLeft: number;
   id: string;
 }

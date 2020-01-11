@@ -2,13 +2,10 @@ import React, { useEffect, useState } from "react";
 import {
   IonContent,
   IonHeader,
-  IonItem,
-  IonLabel,
   IonPage,
   IonTitle,
   IonToolbar,
-  IonCard,
-  IonCardContent
+  IonSpinner
 } from "@ionic/react";
 
 import { IDailyOrder } from "../interfaces";
@@ -17,6 +14,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../scripts/firebase";
 
 import OrderCard from "../components/OrderCard";
+import moment from "moment";
 
 const Page: React.FC = () => {
   const [user] = useAuthState(auth);
@@ -24,7 +22,6 @@ const Page: React.FC = () => {
     null
   );
 
-  console.log(currentOrders);
   useEffect(() => {
     if (user && user.email) {
       airtable("Orders")
@@ -38,6 +35,13 @@ const Page: React.FC = () => {
           } else if (records.length > 0) {
             setCurrentOrders(
               records.map((record: any) => {
+                const cutoffTime = record.get("CutoffTime")[0];
+
+                const hoursLeft = moment(cutoffTime).diff(moment(), "hours");
+                const minutesLeft = moment(cutoffTime)
+                  .subtract(hoursLeft, "hours")
+                  .diff(moment(), "minutes");
+
                 return {
                   userName: record.get("UserName"),
                   userEmail: record.get("UserEmail"),
@@ -47,6 +51,8 @@ const Page: React.FC = () => {
                   paid: record.get("Paid"),
                   ready: record.get("Completed"),
                   received: record.get("Delivered"),
+                  hoursLeft: hoursLeft > 0 ? hoursLeft : 0,
+                  minutesLeft: minutesLeft > 0 ? minutesLeft : 0,
                   id: record.id
                 };
               })
@@ -68,12 +74,19 @@ const Page: React.FC = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent>
-        <div className="mt-12 mb-8">
+        <div className="mt-12 mb-12">
           <div className="mx-6 text-3xl font-bold text-gray-900 font-slab">
             Orders
           </div>
           <div className="mx-6 mt-4 h-1 bg-gray-900" />
         </div>
+        {currentOrders === null ? (
+          <div className="w-full flex content-center justify-center">
+            <IonSpinner name="dots" />
+          </div>
+        ) : (
+          <></>
+        )}
         {currentOrders?.map(currentOrder => (
           <OrderCard key={currentOrder.id} dailyOrder={currentOrder} />
         ))}
