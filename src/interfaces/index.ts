@@ -6,4 +6,7 @@ export interface IDailySpecial {
   collectionDate: string;
   collectionTime: string;
   collectionLocation: string;
+  hoursLeft: number;
+  minutesLeft: number;
+  loading?: boolean;
 }

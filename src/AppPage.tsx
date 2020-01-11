@@ -11,7 +11,7 @@ import {
 } from "@ionic/react";
 
 import { useAuthState } from "react-firebase-hooks/auth";
-import { auth } from "./firebase";
+import { auth } from "./scripts/firebase";
 
 import { apps, home, contact } from "ionicons/icons";
 import DashboardPage from "./pages/DashboardPage";

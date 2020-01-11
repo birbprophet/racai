@@ -2,7 +2,7 @@ import React from "react";
 import { Redirect, Route } from "react-router-dom";
 
 import { useAuthState } from "react-firebase-hooks/auth";
-import { auth } from "./firebase";
+import { auth } from "./scripts/firebase";
 
 import { setupConfig, IonApp, IonLoading } from "@ionic/react";
 import { IonReactRouter } from "@ionic/react-router";

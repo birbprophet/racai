@@ -1,6 +1,6 @@
 import React from "react";
 import { IonContent, IonPage } from "@ionic/react";
-import { auth, googleProvider, facebookProvider } from "../firebase";
+import { auth, googleProvider, facebookProvider } from "../scripts/firebase";
 
 const Page: React.FC = () => {
   const loginWithGoogle = () => auth.signInWithRedirect(googleProvider);

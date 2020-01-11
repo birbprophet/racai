@@ -1,3 +1,4 @@
+import React, { useEffect, useState } from "react";
 import {
   IonContent,
   IonHeader,
@@ -5,27 +6,70 @@ import {
   IonTitle,
   IonToolbar
 } from "@ionic/react";
-import React from "react";
+import moment from "moment";
 import DailySpecialCard from "../components/DailySpecialCard";
 import { IDailySpecial } from "../interfaces";
+import { airtable } from "../scripts/airtable";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth } from "../scripts/firebase";
 
 const Page: React.FC = () => {
-  const dailySpecial: IDailySpecial = {
-    name: "Summer Paradise",
-    description:
-      "Açaí na tigela is a Brazilian specialty from Pará and Amazonas. It is a dish made of the frozen and mashed fruit of the açaí palm.",
-    imgSrc: "/assets/images/acai-bowl-example.jpg",
-    ingredients: [
-      "Acai Berries",
-      "Bananas",
-      "Strawberries",
-      "Almonds",
-      "Blueberries"
-    ],
-    collectionDate: "13 Jan 2020",
-    collectionTime: "12-2pm",
-    collectionLocation: "NTU Hall 2 Block X Room X"
+  const [user] = useAuthState(auth);
+  const [dailySpecials, setDailySpecials] = useState<IDailySpecial[]>([]);
+
+  useEffect(() => {
+    airtable("Daily")
+      .select({
+        maxRecords: 5,
+        view: "Grid view",
+        sort: [{ field: "ID", direction: "desc" }]
+      })
+      .firstPage((err: any, records: any) => {
+        if (err) {
+          console.error(err);
+          return;
+        }
+        const airtableDailySpecials: IDailySpecial[] = records.map(
+          (record: any) => {
+            const hoursLeft = moment(record.get("CutoffTime")).diff(
+              moment(),
+              "hours"
+            );
+            const minutesLeft = moment(record.get("CutoffTime"))
+              .subtract(hoursLeft, "hours")
+              .diff(moment(), "minutes");
+            return {
+              name: record.get("Name"),
+              description: record.get("Description"),
+              imgSrc: record.get("Image")[0].thumbnails.large.url,
+              ingredients: record.get("Ingredients"),
+              collectionDate: moment(record.get("Date")).format("MMM D YYYY"),
+              collectionTime: record.get("Time"),
+              collectionLocation: record.get("Location"),
+              hoursLeft: hoursLeft > 0 ? hoursLeft : 0,
+              minutesLeft: minutesLeft > 0 ? minutesLeft : 0,
+              loading: false
+            };
+          }
+        );
+        setDailySpecials(airtableDailySpecials);
+      });
+  }, []);
+
+  const dailySpecial: IDailySpecial = dailySpecials[0] || {
+    name: "Loading...",
+    description: "Fetching the latest daily special...",
+    imgSrc: "assets/images/acai-bowl-example.jpg",
+    ingredients: [],
+    collectionDate: moment().format("MMM D YYYY"),
+    collectionTime: "",
+    collectionLocation: "",
+    hoursLeft: 0,
+    minutesLeft: 0,
+    loading: true
   };
+
+  const previousSpecials: IDailySpecial[] = dailySpecials.slice(1);
 
   return (
     <IonPage>
@@ -39,7 +83,17 @@ const Page: React.FC = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent>
-        <DailySpecialCard dailySpecial={dailySpecial} />
+        <DailySpecialCard dailySpecial={dailySpecial} isDaily />
+        <div className="w-full mt-12">
+          <div className="m-6 text-2xl font-bold">Previous Specials</div>
+        </div>
+        {previousSpecials.map((previousSpecial: IDailySpecial) => (
+          <DailySpecialCard
+            key={previousSpecial.name + previousSpecial.collectionDate}
+            dailySpecial={previousSpecial}
+            isDaily={false}
+          />
+        ))}
       </IonContent>
     </IonPage>
   );

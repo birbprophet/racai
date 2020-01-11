@@ -8,7 +8,7 @@ const Component: React.FC<{ ingredients: string[] }> = ({ ingredients }) => {
       </div>
       <div className="mt-2">
         {ingredients.map(ingredient => (
-          <div className="flex">
+          <div key={ingredient} className="flex">
             <li />
             <span>{ingredient}</span>
           </div>

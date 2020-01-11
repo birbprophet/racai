@@ -5,7 +5,7 @@ import Typist from "react-typist";
 import TypistLoop from "react-typist-loop";
 
 const Page: React.FC = () => {
-  const typistLoopTextList: string[] = ["boredom", "hongsters", "low GPA"];
+  const typistLoopTextList: string[] = ["happy", "healthy"];
 
   return (
     <IonPage>
@@ -21,7 +21,7 @@ const Page: React.FC = () => {
               <div className="text-4xl font-slab font-bold">
                 An açaí a day
                 <br />
-                keeps the
+                keeps you
               </div>
               <div className="h-16">
                 <TypistLoop interval={0}>
@@ -47,7 +47,7 @@ const Page: React.FC = () => {
                 </TypistLoop>
               </div>
             </div>
-            <div className="text-4xl font-slab font-bold">away</div>
+            <div className="text-4xl font-slab font-bold">all day</div>
             <div className="mt-6">
               <div className="text-lg text-gray-700 leading-relaxed">
                 Racai's homemade açaí bowls are made with of fresh, 100% natural
@@ -56,7 +56,7 @@ const Page: React.FC = () => {
             </div>
             <div className="mt-12">
               <Link to="/login">
-                <button className="w-full py-4 font-bold bg-purple-800 text-white text-xl hover:bg-purple-600">
+                <button className="rounded w-full py-4 font-bold bg-purple-800 text-white text-xl hover:bg-purple-600">
                   TRY A BOWL TODAY
                 </button>
               </Link>
