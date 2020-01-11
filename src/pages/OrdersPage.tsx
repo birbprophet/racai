@@ -46,8 +46,10 @@ const Page: React.FC = () => {
                   userName: record.get("UserName"),
                   userEmail: record.get("UserEmail"),
                   orderTime: record.get("OrderTime"),
-                  dailyName: record.get("DailyName"),
-                  dailyDate: record.get("DailyDate"),
+                  dailyName: record.get("DailyName")[0],
+                  dailyDate: moment(record.get("DailyDate")[0]).format(
+                    "MMM D YYYY"
+                  ),
                   paid: record.get("Paid"),
                   ready: record.get("Completed"),
                   received: record.get("Delivered"),
