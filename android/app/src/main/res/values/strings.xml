@@ -2,6 +2,6 @@
 <resources>
     <string name="app_name">racai</string>
     <string name="title_activity_main">racai</string>
-    <string name="package_name">io.ionic.starter</string>
-    <string name="custom_url_scheme">io.ionic.starter</string>
+    <string name="package_name">app.racai.app</string>
+    <string name="custom_url_scheme">app.racai.app</string>
 </resources>

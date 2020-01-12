@@ -10,7 +10,7 @@ interface Props {
 }
 
 const Component: React.FC<Props> = ({ dailyOrder }: Props) => {
-  const [, setOrderId] = useGlobal("orderId");
+  const [orderId, setOrderId] = useGlobal("orderId");
   const [instructionsClicked, setInstructionsClicked] = useState<boolean>(
     false
   );
@@ -37,7 +37,7 @@ const Component: React.FC<Props> = ({ dailyOrder }: Props) => {
       if (err || deletedRecords.length < 1) {
         console.error(err);
       }
-      setOrderId(null);
+      setOrderId(orderId === null ? 0 : null);
     });
   };
 

@@ -53,7 +53,6 @@ const ReactComponent: React.FC = () => {
   const [refreshCount] = useGlobal("refreshCount");
   const [orderId] = useGlobal("orderId");
   const [refresherOpen] = useGlobal("refresherOpen");
-
   useEffect(() => {
     if (user && user.email) {
       airtable("Orders")
@@ -64,7 +63,7 @@ const ReactComponent: React.FC = () => {
         .firstPage((err: any, records: any) => {
           if (err) {
             console.error(err);
-          } else if (records.length > 0) {
+          } else {
             setCurrentOrders(
               records.map((record: any) => {
                 const cutoffTime = record.get("CutoffTime")[0];

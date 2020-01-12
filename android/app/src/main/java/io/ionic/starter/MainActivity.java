@@ -1,4 +1,4 @@
-package io.ionic.starter;
+package app.racai.app;
 
 import android.os.Bundle;
 

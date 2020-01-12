@@ -34,7 +34,9 @@ const Component: React.FC<Props> = ({ dailySpecial, isDaily }: Props) => {
       return order.dailyDate === dailySpecial.collectionDate;
     }).length > 0;
 
-  const orderSuccess = orderId !== null;
+  const orderSuccess = orderId !== null && orderId !== 0;
+  if (isDaily) {
+  }
 
   const handleOrderOnClicked = () => {
     airtable("Orders").create(

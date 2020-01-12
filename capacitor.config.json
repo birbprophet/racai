@@ -3,6 +3,6 @@
   "appName": "Racai",
   "bundledWebRuntime": false,
   "npmClient": "npm",
-  "webDir": "www",
+  "webDir": "build",
   "cordova": {}
 }
