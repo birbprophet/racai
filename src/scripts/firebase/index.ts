@@ -1,8 +1,6 @@
 import firebase from "firebase/app";
 import "firebase/auth";
-import "firebase/firestore";
 import "firebase/analytics";
-import "firebase/database";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDA-aVDwH4sNwlFiH6Bpv_su5qY9t7_sDo",
@@ -15,9 +13,9 @@ const firebaseConfig = {
   measurementId: "G-YS4LWB1Q90"
 };
 
-export const firebaseApp = firebase.initializeApp(firebaseConfig);
+firebase.initializeApp(firebaseConfig);
 export const analytics = firebase.analytics();
-export const firestore = firebase.firestore();
+// export const firestore = firebase.firestore();
 export const auth = firebase.auth();
 export const googleProvider = new firebase.auth.GoogleAuthProvider();
 export const facebookProvider = new firebase.auth.FacebookAuthProvider();
