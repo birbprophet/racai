@@ -19,6 +19,7 @@ import { apps, home, contact } from "ionicons/icons";
 import DashboardPage from "./pages/DashboardPage";
 import OrdersPage from "./pages/OrdersPage";
 import AccountPage from "./pages/AccountPage";
+import { IDailySpecial } from "./interfaces";
 
 const ProtectedRoute: React.FC<any> = ({ component: Component, ...rest }) => {
   const [user, initialising] = useAuthState(auth);
@@ -53,6 +54,49 @@ const ReactComponent: React.FC = () => {
   const [refreshCount] = useGlobal("refreshCount");
   const [orderId] = useGlobal("orderId");
   const [refresherOpen] = useGlobal("refresherOpen");
+  const [, setDailySpecials] = useGlobal("dailySpecials");
+
+  useEffect(() => {
+    airtable("Daily")
+      .select({
+        maxRecords: 5,
+        view: "Grid view",
+        sort: [{ field: "ID", direction: "desc" }]
+      })
+      .firstPage((err: any, records: any) => {
+        if (err) {
+          console.error(err);
+          return;
+        }
+        const airtableDailySpecials: IDailySpecial[] = records.map(
+          (record: any) => {
+            const cutoffTime = record.get("CutoffTime");
+
+            const hoursLeft = moment(cutoffTime).diff(moment(), "hours");
+            const minutesLeft = moment(cutoffTime)
+              .subtract(hoursLeft, "hours")
+              .diff(moment(), "minutes");
+
+            return {
+              name: record.get("Name"),
+              description: record.get("Description"),
+              imgSrc: record.get("Image")[0].thumbnails.large.url,
+              ingredients: record.get("Ingredients"),
+              collectionDate: moment(record.get("Date")).format("MMM D YYYY"),
+              collectionTime: record.get("Time"),
+              collectionLocation: record.get("Location"),
+              hoursLeft: hoursLeft > 0 ? hoursLeft : 0,
+              minutesLeft: minutesLeft > 0 ? minutesLeft : 0,
+              id: record.id,
+              loading: false,
+              price: record.get("Price")
+            };
+          }
+        );
+        setDailySpecials(airtableDailySpecials);
+      });
+  }, [setDailySpecials, refreshCount, refresherOpen, orderId]);
+
   useEffect(() => {
     if (user && user.email) {
       airtable("Orders")

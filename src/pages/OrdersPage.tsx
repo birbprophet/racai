@@ -1,12 +1,16 @@
 import React, { useGlobal } from "reactn";
-import { IonContent, IonPage, IonSpinner } from "@ionic/react";
+import { IonContent, IonPage, IonSpinner, IonLoading } from "@ionic/react";
 import AppHeader from "../components/AppHeader";
-import { Link } from "react-router-dom";
 
 import OrderCard from "../components/OrderCard";
 
 const Page: React.FC = () => {
   const [currentOrders] = useGlobal("currentOrders");
+  const [refresherOpen, setRefresherOpen] = useGlobal("refresherOpen");
+
+  const handleNoResultsButtonOnClick = () => {
+    setRefresherOpen(true);
+  };
 
   return (
     <IonPage>
@@ -31,16 +35,23 @@ const Page: React.FC = () => {
         {currentOrders && currentOrders.length === 0 ? (
           <div className="px-6 flex flex-col">
             <div className="mb-4 text-lg">You have no orders yet...</div>
-            <Link to="/app/dashboard">
-              <button className="rounded w-full py-4 font-bold bg-purple-800 text-white text-xl hover:bg-purple-600 tracking-widest">
-                BACK TO HOME
-              </button>
-            </Link>
+            <button
+              onClick={handleNoResultsButtonOnClick}
+              className="rounded w-full py-4 font-bold bg-purple-800 text-white text-xl hover:bg-purple-600 tracking-widest"
+            >
+              REFRESH PAGE
+            </button>
           </div>
         ) : (
           <></>
         )}
       </IonContent>
+      <IonLoading
+        isOpen={refresherOpen}
+        onDidDismiss={() => setRefresherOpen(false)}
+        message={"Refreshing..."}
+        duration={252}
+      />
     </IonPage>
   );
 };

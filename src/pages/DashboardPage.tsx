@@ -1,55 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, { useGlobal } from "reactn";
 import { IonContent, IonPage } from "@ionic/react";
 import moment from "moment";
 import DailySpecialCard from "../components/DailySpecialCard";
 import { IDailySpecial } from "../interfaces";
-import { airtable } from "../scripts/airtable";
 
 import AppHeader from "../components/AppHeader";
 
 const Page: React.FC = () => {
-  const [dailySpecials, setDailySpecials] = useState<IDailySpecial[]>([]);
-
-  useEffect(() => {
-    airtable("Daily")
-      .select({
-        maxRecords: 5,
-        view: "Grid view",
-        sort: [{ field: "ID", direction: "desc" }]
-      })
-      .firstPage((err: any, records: any) => {
-        if (err) {
-          console.error(err);
-          return;
-        }
-        const airtableDailySpecials: IDailySpecial[] = records.map(
-          (record: any) => {
-            const cutoffTime = record.get("CutoffTime");
-
-            const hoursLeft = moment(cutoffTime).diff(moment(), "hours");
-            const minutesLeft = moment(cutoffTime)
-              .subtract(hoursLeft, "hours")
-              .diff(moment(), "minutes");
-
-            return {
-              name: record.get("Name"),
-              description: record.get("Description"),
-              imgSrc: record.get("Image")[0].thumbnails.large.url,
-              ingredients: record.get("Ingredients"),
-              collectionDate: moment(record.get("Date")).format("MMM D YYYY"),
-              collectionTime: record.get("Time"),
-              collectionLocation: record.get("Location"),
-              hoursLeft: hoursLeft > 0 ? hoursLeft : 0,
-              minutesLeft: minutesLeft > 0 ? minutesLeft : 0,
-              id: record.id,
-              loading: false,
-              price: record.get("Price")
-            };
-          }
-        );
-        setDailySpecials(airtableDailySpecials);
-      });
-  }, []);
+  const [dailySpecials] = useGlobal("dailySpecials");
 
   const dailySpecial: IDailySpecial = dailySpecials[0] || {
     name: "Loading...",

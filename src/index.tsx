@@ -5,6 +5,7 @@ import * as serviceWorker from "./serviceWorker";
 
 setGlobal({
   currentOrders: null,
+  dailySpecials: [],
   refreshCount: 0,
   refresherOpen: false,
   orderId: null
