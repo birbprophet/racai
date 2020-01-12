@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useGlobal } from "reactn";
 import { IonAlert, IonCard, IonCardContent, IonCardTitle } from "@ionic/react";
 
 import { IDailyOrder } from "../interfaces";
@@ -10,7 +10,7 @@ interface Props {
 }
 
 const Component: React.FC<Props> = ({ dailyOrder }: Props) => {
-  const [cancelSuccess, setCancelSuccess] = useState<boolean>(false);
+  const [refreshCount, setRefreshCount] = useGlobal("refreshCount");
   const [instructionsClicked, setInstructionsClicked] = useState<boolean>(
     false
   );
@@ -37,13 +37,11 @@ const Component: React.FC<Props> = ({ dailyOrder }: Props) => {
       if (err || deletedRecords.length < 1) {
         console.error(err);
       }
-      setCancelSuccess(true);
+      setRefreshCount(refreshCount + 1);
     });
   };
 
-  return cancelSuccess ? (
-    <></>
-  ) : (
+  return (
     <IonCard>
       <IonCardContent>
         <div className="font-semibold tracking-widest text-sm">
@@ -85,7 +83,8 @@ const Component: React.FC<Props> = ({ dailyOrder }: Props) => {
         isOpen={instructionsClicked}
         onDidDismiss={() => setInstructionsClicked(false)}
         header={"Payment Instructions"}
-        message={"For payment, please transfer $5 to +6584883341 via PayNow."}
+        message={`For payment, please transfer $5 to +6584883341 via PayNow with
+              message: "Order ${dailyOrder.orderId}"`}
         buttons={["OK"]}
       />
     </IonCard>

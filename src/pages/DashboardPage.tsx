@@ -1,15 +1,11 @@
 import React, { useEffect, useState } from "react";
-import {
-  IonContent,
-  IonHeader,
-  IonPage,
-  IonTitle,
-  IonToolbar
-} from "@ionic/react";
+import { IonContent, IonPage } from "@ionic/react";
 import moment from "moment";
 import DailySpecialCard from "../components/DailySpecialCard";
 import { IDailySpecial } from "../interfaces";
 import { airtable } from "../scripts/airtable";
+
+import AppHeader from "../components/AppHeader";
 
 const Page: React.FC = () => {
   const [dailySpecials, setDailySpecials] = useState<IDailySpecial[]>([]);
@@ -72,15 +68,7 @@ const Page: React.FC = () => {
 
   return (
     <IonPage>
-      <IonHeader>
-        <IonToolbar>
-          <IonTitle>
-            <span className="font-slab text-xl text-purple-800 font-black tracking-wider">
-              RACAI
-            </span>
-          </IonTitle>
-        </IonToolbar>
-      </IonHeader>
+      <AppHeader />
       <IonContent>
         <DailySpecialCard dailySpecial={dailySpecial} isDaily />
         <div className="mt-16 mb-12">

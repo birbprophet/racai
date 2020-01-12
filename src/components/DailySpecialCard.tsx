@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useGlobal } from "reactn";
 import { IonCard, IonCardContent, IonCardTitle, IonAlert } from "@ionic/react";
 import IngredientsList from "./IngredientsList";
-import { IDailySpecial } from "../interfaces";
+import { IDailySpecial, IDailyOrder } from "../interfaces";
 import { airtable } from "../scripts/airtable";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../scripts/firebase";
@@ -14,35 +14,27 @@ interface Props {
 }
 const Component: React.FC<Props> = ({ dailySpecial, isDaily }: Props) => {
   const [user] = useAuthState(auth);
+  const [currentOrders] = useGlobal("currentOrders");
   const [detailsClicked, setDetailsClicked] = useState<boolean>(false);
-  const [orderSuccess, setOrderSuccess] = useState<boolean>(false);
+  const [orderId, setOrderId] = useGlobal("orderId");
   const [instructionsDismissed, setInstructionsDismissed] = useState<boolean>(
     false
   );
-  const [orderExists, setOrderExists] = useState<boolean>(false);
   const [orderFailed, setOrderFailed] = useState<boolean>(false);
+
   const handleDetailsOnClicked = () => {
     setDetailsClicked(!detailsClicked);
   };
   const isActive: boolean =
     dailySpecial.hoursLeft > 0 && dailySpecial.minutesLeft > 0;
 
-  useEffect(() => {
-    if (user && user.email) {
-      airtable("Orders")
-        .select({
-          maxRecords: 1,
-          filterByFormula: `AND({UserEmail} = '${user.email}', {DailyDate} = '${dailySpecial.collectionDate})`
-        })
-        .firstPage((err: any, records: any) => {
-          if (err) {
-            console.error(err);
-          } else if (records.length > 0) {
-            setOrderExists(true);
-          }
-        });
-    }
-  }, [user, dailySpecial.collectionDate]);
+  const orderExists =
+    isDaily &&
+    (currentOrders || []).filter((order: IDailyOrder) => {
+      return order.dailyDate === dailySpecial.collectionDate;
+    }).length > 0;
+
+  const orderSuccess = orderId !== null;
 
   const handleOrderOnClicked = () => {
     airtable("Orders").create(
@@ -59,10 +51,10 @@ const Component: React.FC<Props> = ({ dailySpecial, isDaily }: Props) => {
         }
       ],
       (err: any, records: any) => {
-        if (err || !records) {
+        if (err || !records || !records.length) {
           setOrderFailed(true);
-        } else if (records) {
-          setOrderSuccess(true);
+        } else {
+          setOrderId(records[0].get("ID"));
         }
       }
     );
@@ -164,7 +156,8 @@ const Component: React.FC<Props> = ({ dailySpecial, isDaily }: Props) => {
         isOpen={orderSuccess || instructionsDismissed}
         onDidDismiss={() => setInstructionsDismissed(true)}
         header={"Payment Instructions"}
-        message={"For payment, please transfer $5 to +6584883341 via PayNow."}
+        message={`For payment, please transfer $5 to +6584883341 via PayNow with
+        message: "Order ${orderId}"`}
         buttons={["OK"]}
       />
     </IonCard>

@@ -1,10 +1,7 @@
 import React from "react";
 import {
   IonContent,
-  IonHeader,
   IonPage,
-  IonTitle,
-  IonToolbar,
   IonItem,
   IonAvatar,
   IonLabel,
@@ -14,20 +11,14 @@ import {
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../scripts/firebase";
 
+import AppHeader from "../components/AppHeader";
+
 const Page: React.FC = () => {
   const [user] = useAuthState(auth);
   const handleLogoutOnClick = () => auth.signOut();
   return (
     <IonPage>
-      <IonHeader>
-        <IonToolbar>
-          <IonTitle>
-            <span className="font-slab text-xl text-purple-800 font-black tracking-wider">
-              RACAI
-            </span>
-          </IonTitle>
-        </IonToolbar>
-      </IonHeader>
+      <AppHeader />
       <IonContent>
         <IonCard>
           <IonCardContent>

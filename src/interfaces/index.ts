@@ -24,4 +24,5 @@ export interface IDailyOrder {
   hoursLeft: number;
   minutesLeft: number;
   id: string;
+  orderId: string;
 }

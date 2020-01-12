@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useGlobal } from "reactn";
 import { Redirect, Route } from "react-router-dom";
 import {
   IonIcon,
@@ -12,6 +12,8 @@ import {
 
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "./scripts/firebase";
+import { airtable } from "./scripts/airtable";
+import moment from "moment";
 
 import { apps, home, contact } from "ionicons/icons";
 import DashboardPage from "./pages/DashboardPage";
@@ -46,6 +48,55 @@ const ProtectedRoute: React.FC<any> = ({ component: Component, ...rest }) => {
 };
 
 const ReactComponent: React.FC = () => {
+  const [user] = useAuthState(auth);
+  const [, setCurrentOrders] = useGlobal("currentOrders");
+  const [refreshCount] = useGlobal("refreshCount");
+  const [orderId] = useGlobal("orderId");
+  const [refresherOpen] = useGlobal("refresherOpen");
+
+  useEffect(() => {
+    if (user && user.email) {
+      airtable("Orders")
+        .select({
+          sort: [{ field: "ID", direction: "desc" }],
+          filterByFormula: `({UserEmail} = '${user.email}')`
+        })
+        .firstPage((err: any, records: any) => {
+          if (err) {
+            console.error(err);
+          } else if (records.length > 0) {
+            setCurrentOrders(
+              records.map((record: any) => {
+                const cutoffTime = record.get("CutoffTime")[0];
+
+                const hoursLeft = moment(cutoffTime).diff(moment(), "hours");
+                const minutesLeft = moment(cutoffTime)
+                  .subtract(hoursLeft, "hours")
+                  .diff(moment(), "minutes");
+
+                return {
+                  userName: record.get("UserName"),
+                  userEmail: record.get("UserEmail"),
+                  orderTime: record.get("OrderTime"),
+                  dailyName: record.get("DailyName")[0],
+                  dailyDate: moment(record.get("DailyDate")[0]).format(
+                    "MMM D YYYY"
+                  ),
+                  paid: record.get("Paid"),
+                  ready: record.get("Completed"),
+                  received: record.get("Delivered"),
+                  hoursLeft: hoursLeft > 0 ? hoursLeft : 0,
+                  minutesLeft: minutesLeft > 0 ? minutesLeft : 0,
+                  id: record.id,
+                  orderId: record.get("ID")
+                };
+              })
+            );
+          }
+        });
+    }
+  }, [user, setCurrentOrders, refreshCount, refresherOpen, orderId]);
+
   return (
     <IonTabs>
       <IonRouterOutlet>
