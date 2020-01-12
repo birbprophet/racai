@@ -10,7 +10,7 @@ interface Props {
 }
 
 const Component: React.FC<Props> = ({ dailyOrder }: Props) => {
-  const [refreshCount, setRefreshCount] = useGlobal("refreshCount");
+  const [, setOrderId] = useGlobal("orderId");
   const [instructionsClicked, setInstructionsClicked] = useState<boolean>(
     false
   );
@@ -37,7 +37,7 @@ const Component: React.FC<Props> = ({ dailyOrder }: Props) => {
       if (err || deletedRecords.length < 1) {
         console.error(err);
       }
-      setRefreshCount(refreshCount + 1);
+      setOrderId(null);
     });
   };
 
@@ -83,7 +83,7 @@ const Component: React.FC<Props> = ({ dailyOrder }: Props) => {
         isOpen={instructionsClicked}
         onDidDismiss={() => setInstructionsClicked(false)}
         header={"Payment Instructions"}
-        message={`For payment, please transfer $5 to +6584883341 via PayNow with
+        message={`For payment, please transfer $${dailyOrder.price} to +6584883341 via PayNow with
               message: "Order ${dailyOrder.orderId}"`}
         buttons={["OK"]}
       />
