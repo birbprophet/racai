@@ -1,5 +1,7 @@
 {
   "name": "racai",
-  "integrations": {},
+  "integrations": {
+    "capacitor": {}
+  },
   "type": "react"
 }

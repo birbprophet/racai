@@ -1,0 +1,8 @@
+{
+  "appId": "app.racai.app",
+  "appName": "Racai",
+  "bundledWebRuntime": false,
+  "npmClient": "npm",
+  "webDir": "build",
+  "cordova": {}
+}

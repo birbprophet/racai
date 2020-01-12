@@ -88,7 +88,8 @@ const ReactComponent: React.FC = () => {
                   hoursLeft: hoursLeft > 0 ? hoursLeft : 0,
                   minutesLeft: minutesLeft > 0 ? minutesLeft : 0,
                   id: record.id,
-                  orderId: record.get("ID")
+                  orderId: record.get("ID"),
+                  price: record.get("Price") ? record.get("Price")[0] : 5
                 };
               })
             );

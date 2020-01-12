@@ -42,7 +42,8 @@ const Page: React.FC = () => {
               hoursLeft: hoursLeft > 0 ? hoursLeft : 0,
               minutesLeft: minutesLeft > 0 ? minutesLeft : 0,
               id: record.id,
-              loading: false
+              loading: false,
+              price: record.get("Price")
             };
           }
         );

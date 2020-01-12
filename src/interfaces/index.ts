@@ -10,6 +10,7 @@ export interface IDailySpecial {
   minutesLeft: number;
   id: string;
   loading: boolean;
+  price: number;
 }
 
 export interface IDailyOrder {
@@ -25,4 +26,5 @@ export interface IDailyOrder {
   minutesLeft: number;
   id: string;
   orderId: string;
+  price: number;
 }

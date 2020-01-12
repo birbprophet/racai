@@ -130,9 +130,15 @@ const Component: React.FC<Props> = ({ dailySpecial, isDaily }: Props) => {
               <IngredientsList ingredients={dailySpecial.ingredients} />
               <div className="mt-4">
                 <div>
-                  <span className="text-lg font-semibold">Collection:</span>
+                  <span className="text-lg font-semibold">
+                    Collection / Details:
+                  </span>
                 </div>
                 <div className="mt-2">
+                  <div className="flex">
+                    <span className="w-24">Price:</span>
+                    <span>{`$${dailySpecial.price}.00`}</span>
+                  </div>
                   <div className="flex">
                     <span className="w-24">Date/Time:</span>
                     <span>
@@ -156,7 +162,7 @@ const Component: React.FC<Props> = ({ dailySpecial, isDaily }: Props) => {
         isOpen={orderSuccess || instructionsDismissed}
         onDidDismiss={() => setInstructionsDismissed(true)}
         header={"Payment Instructions"}
-        message={`For payment, please transfer $5 to +6584883341 via PayNow with
+        message={`For payment, please transfer $${dailySpecial.price} to +6584883341 via PayNow with
         message: "Order ${orderId}"`}
         buttons={["OK"]}
       />
