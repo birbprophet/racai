@@ -18,9 +18,11 @@ const Page: React.FC = () => {
       <IonContent>
         <div className="h-full flex flex-col">
           <div className="w-full px-8 py-4">
-            <div className="font-slab text-2xl text-purple-800 font-black tracking-wider">
-              RACAI
-            </div>
+            <Link to="/" className="no-underline">
+              <div className="font-slab text-2xl text-purple-800 font-black tracking-wider">
+                RACAI
+              </div>
+            </Link>
           </div>
           <div className="pt-10 px-8 flex-1 bg-gray-100">
             <div className="flex flex-col">

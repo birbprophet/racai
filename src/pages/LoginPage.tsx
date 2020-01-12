@@ -1,4 +1,6 @@
 import React from "react";
+import { Link } from "react-router-dom";
+
 import { IonContent, IonPage } from "@ionic/react";
 import { auth, googleProvider, facebookProvider } from "../scripts/firebase";
 
@@ -11,9 +13,11 @@ const Page: React.FC = () => {
       <IonContent>
         <div className="h-full flex flex-col">
           <div className="w-full px-8 py-4">
-            <div className="font-slab text-2xl text-purple-800 font-black tracking-wider">
-              RACAI
-            </div>
+            <Link to="/" className="no-underline">
+              <div className="font-slab text-2xl text-purple-800 font-black tracking-wider">
+                RACAI
+              </div>
+            </Link>
           </div>
           <div className="pt-16 px-8 flex-1 bg-gray-100">
             <div className="my-4">
