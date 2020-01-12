@@ -40,7 +40,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build && ionic build --prod",
+    "build": "npx ionic build --prod",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "tailwind": "npx tailwind build src/css/tailwind.css -o src/css/index.css",
