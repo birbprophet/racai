@@ -1,6 +1,6 @@
 {
-  "appId": "io.ionic.starter",
-  "appName": "racai",
+  "appId": "app.racai.app",
+  "appName": "Racai",
   "bundledWebRuntime": false,
   "npmClient": "npm",
   "webDir": "build",
