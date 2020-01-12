@@ -40,7 +40,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "ionic build --prod",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "tailwind": "npx tailwind build src/css/tailwind.css -o src/css/index.css",
@@ -63,5 +63,6 @@
       "last 1 safari version"
     ]
   },
-  "description": "An Ionic project"
+  "description": "RACAI - The açaí of your eye",
+  "homepage": "https://racai.app"
 }
