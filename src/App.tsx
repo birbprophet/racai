@@ -36,6 +36,7 @@ import "./css/styles.css";
 import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
 import AppPage from "./AppPage";
+import TOSPage from "./pages/TOSPage";
 
 setupConfig({
   mode: "ios"
@@ -78,6 +79,7 @@ const App: React.FC = () => {
           exact={true}
         />
         <Route path="/app" component={AppPage} />
+        <Route path="/tos" component={TOSPage} />
       </IonReactRouter>
     </IonApp>
   );
