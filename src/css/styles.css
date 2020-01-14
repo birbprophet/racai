@@ -1,3 +1,7 @@
 html * {
   font-family: "Roboto";
 }
+
+body {
+  max-width: 640px;
+}
